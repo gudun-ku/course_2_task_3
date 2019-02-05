@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".MainActivity">
+
+    <ProgressBar
+
+        android:id="@+id/pb_circular"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="50"
+        android:layout_gravity="center_horizontal"
+        android:progressDrawable="@drawable/circular"
+        android:secondaryProgress="100"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:id="@+id/tv_stage"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/lbl_button_start"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/lbl_button_start"
+        android:visibility="visible" />
+
+
+
+</LinearLayout>

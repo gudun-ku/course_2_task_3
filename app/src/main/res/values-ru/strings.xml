@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Имитация загрузки с ATL</string>
+    <string name="lbl_button_start">Start</string>
+    <string name="lbl_stage_loading">Loading...</string>
+    <string name="lbl_stage_ready">Ready</string>
+</resources>
