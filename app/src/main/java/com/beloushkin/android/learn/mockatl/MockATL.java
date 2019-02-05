@@ -10,11 +10,15 @@ import java.util.concurrent.TimeUnit;
 public class MockATL extends AsyncTaskLoader<Boolean> {
     public final String TAG = getClass().getSimpleName();
 
+    public static final String MOCK_TIME = "MOCK_TIME";
+
     private boolean done = false;
     private boolean mIsRunning = false;
+    private Bundle args;
 
     public MockATL(Context context, Bundle args) {
         super(context);
+        this.args = args;
     }
 
     public boolean isRunning() {
@@ -23,6 +27,10 @@ public class MockATL extends AsyncTaskLoader<Boolean> {
 
     @Override
     protected void onStartLoading() {
+      if (args == null) {
+          return;
+      }
+
       if (done) {
           deliverResult(done);
       } else {
@@ -35,7 +43,8 @@ public class MockATL extends AsyncTaskLoader<Boolean> {
     @Override
     public Boolean loadInBackground() {
         Log.d(TAG, "loadInBackground");
-        return processTask(15000);
+        int mockTime = args.getInt(MOCK_TIME);
+        return processTask(mockTime);
     }
 
     @Override

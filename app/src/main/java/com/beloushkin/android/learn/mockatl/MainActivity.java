@@ -12,7 +12,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Boolean> {
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Boolean>,
+        View.OnClickListener {
 
     public final String TAG = this.getClass().getSimpleName();
 
@@ -21,15 +23,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ProgressBar pbCircular;
     private Loader<Boolean> mLoader;
     public static final int LOADER_ID = 10201;
+    private final int mockTime = 10000;
 
-    private Loader<Boolean> initTaskLoader(LoaderManager.LoaderCallbacks<Boolean> callbacks) {
-        LoaderManager lm = getSupportLoaderManager();
-        Loader<Boolean> loader = lm.getLoader(LOADER_ID);
-        if (loader == null) {
-            loader = lm.initLoader(LOADER_ID, null, callbacks);
-        }
-        return loader;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,31 +34,43 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         tvStage = findViewById(R.id.tv_stage);
         pbCircular = findViewById(R.id.pb_circular);
         btnAction = findViewById(R.id.btn_action);
-        mLoader = initTaskLoader(this);
-
-        btnAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pbCircular.setVisibility(View.VISIBLE);
-                tvStage.setText(getString(R.string.lbl_stage_loading));
-                btnAction.setEnabled(false);
-                mLoader = initTaskLoader(MainActivity.this);
-                getSupportLoaderManager().restartLoader(LOADER_ID, null,
-                        MainActivity.this);
-            }
-        });
+        mLoader = getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        btnAction.setOnClickListener(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        if (((MockATL) mLoader).isRunning()) {
+            pbCircular.setVisibility(View.VISIBLE);
+            tvStage.setText(getString(R.string.lbl_stage_loading));
+            btnAction.setEnabled(false);
+        } else {
+            pbCircular.setVisibility(View.INVISIBLE);
+            tvStage.setText(getString(R.string.lbl_stage_ready));
+            btnAction.setEnabled(true);
+        }
     }
 
+    @Override
+    public void onClick(View v) {
+        Bundle args = new Bundle();
+        args.putInt(MockATL.MOCK_TIME, mockTime);
+        getSupportLoaderManager().restartLoader(LOADER_ID, args,
+                MainActivity.this);
+
+    }
 
     @NonNull
     @Override
     public Loader<Boolean> onCreateLoader(int id, @Nullable Bundle bundle) {
         Log.d(TAG, "onCreateLoader");
+        if (bundle != null) {
+            // we're really starting
+            pbCircular.setVisibility(View.VISIBLE);
+            tvStage.setText(getString(R.string.lbl_stage_loading));
+            btnAction.setEnabled(false);
+        }
         return new MockATL(this, bundle);
 
     }
