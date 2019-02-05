@@ -10,46 +10,38 @@ import java.util.concurrent.TimeUnit;
 public class MockATL extends AsyncTaskLoader<Boolean> {
     public final String TAG = getClass().getSimpleName();
 
-    private boolean isRunning;
-
-    public boolean isRunning() {
-        return isRunning;
-    }
+    private boolean done = false;
+    private boolean mIsRunning = false;
 
     public MockATL(Context context, Bundle args) {
         super(context);
     }
 
-    @Override
-    public Boolean loadInBackground() {
-        Log.d(TAG, "loadInBackground");
-        isRunning = true;
-        return processTask();
-    }
-
-    @Override
-    public void forceLoad() {
-        Log.d(TAG, "forceLoad");
-        super.forceLoad();
+    public boolean isRunning() {
+        return mIsRunning;
     }
 
     @Override
     protected void onStartLoading() {
-        super.onStartLoading();
-        Log.d(TAG, "onStartLoading");
+      if (done) {
+          deliverResult(done);
+      } else {
+          forceLoad();
+      }
     }
 
+
+
     @Override
-    protected void onStopLoading() {
-        super.onStopLoading();
-        Log.d(TAG, "onStopLoading");
+    public Boolean loadInBackground() {
+        Log.d(TAG, "loadInBackground");
+        return processTask(15000);
     }
 
     @Override
     protected void onReset() {
         super.onReset();
         Log.d(TAG, "onReset: ");
-        forceLoad();
     }
 
     @Override
@@ -59,15 +51,18 @@ public class MockATL extends AsyncTaskLoader<Boolean> {
     }
 
 
-    private boolean processTask() {
-        // sleep for 5 second
+    private boolean processTask(int mockTime) {
+        // sleep for 5 seconds
+        done = false;
+        mIsRunning = true;
         try {
-            TimeUnit.MILLISECONDS.sleep(5000);
+            TimeUnit.MILLISECONDS.sleep(mockTime);
         } catch (InterruptedException e) {
-            isRunning = false;
+            mIsRunning = false;
             return false;
         }
-        isRunning = false;
+        mIsRunning = false;
+        done = true;
         return true;
     }
 }

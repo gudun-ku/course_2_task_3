@@ -3,4 +3,5 @@
     <string name="lbl_button_start">Start</string>
     <string name="lbl_stage_loading">Loading...</string>
     <string name="lbl_stage_ready">Ready</string>
+    <string name="lbl_stage_error">Loading error!</string>
 </resources>
