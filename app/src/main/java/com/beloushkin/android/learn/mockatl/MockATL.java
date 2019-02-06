@@ -12,7 +12,7 @@ public class MockATL extends AsyncTaskLoader<Boolean> {
 
     public static final String MOCK_TIME = "MOCK_TIME";
 
-    private boolean done = false;
+    private boolean mIsDone = false;
     private boolean mIsRunning = false;
     private Bundle args;
 
@@ -25,20 +25,22 @@ public class MockATL extends AsyncTaskLoader<Boolean> {
         return mIsRunning;
     }
 
+    public boolean isDone() {
+        return mIsDone;
+    }
+
     @Override
     protected void onStartLoading() {
       if (args == null) {
           return;
       }
 
-      if (done) {
-          deliverResult(done);
+      if (mIsDone) {
+          deliverResult(mIsDone);
       } else {
           forceLoad();
       }
     }
-
-
 
     @Override
     public Boolean loadInBackground() {
@@ -59,19 +61,21 @@ public class MockATL extends AsyncTaskLoader<Boolean> {
         super.deliverResult(result);
     }
 
-
     private boolean processTask(int mockTime) {
-        // sleep for 5 seconds
-        done = false;
+        // sleep for n seconds
+        mIsDone = false;
         mIsRunning = true;
+
         try {
             TimeUnit.MILLISECONDS.sleep(mockTime);
         } catch (InterruptedException e) {
             mIsRunning = false;
             return false;
         }
+
+        mIsDone = true;
         mIsRunning = false;
-        done = true;
+
         return true;
     }
 }

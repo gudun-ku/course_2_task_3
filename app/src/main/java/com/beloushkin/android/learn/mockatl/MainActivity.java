@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar pbCircular;
     private Loader<Boolean> mLoader;
     public static final int LOADER_ID = 10201;
-    private final int mockTime = 10000;
+    private final int mockTime = 5000;
 
 
     @Override
@@ -47,7 +47,11 @@ public class MainActivity extends AppCompatActivity
             btnAction.setEnabled(false);
         } else {
             pbCircular.setVisibility(View.INVISIBLE);
-            tvStage.setText(getString(R.string.lbl_stage_ready));
+            if (((MockATL) mLoader).isDone()) {
+                tvStage.setText(getString(R.string.lbl_stage_ready));
+            } else {
+                tvStage.setText("");
+            }
             btnAction.setEnabled(true);
         }
     }
@@ -58,7 +62,6 @@ public class MainActivity extends AppCompatActivity
         args.putInt(MockATL.MOCK_TIME, mockTime);
         getSupportLoaderManager().restartLoader(LOADER_ID, args,
                 MainActivity.this);
-
     }
 
     @NonNull
